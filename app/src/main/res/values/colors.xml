@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="purple_200">#FFBB86FC</color>
+    <color name="purple_500">#FF6200EE</color>
+    <color name="purple_700">#FF3700B3</color>
+    <color name="teal_200">#FF03DAC5</color>
+    <color name="teal_700">#FF018786</color>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+<!--    <color name="Base_Color">#7209b7</color>-->
+    <color name="Base_Color">#DC1C1C</color>
+    <color name="Dynamic_2">#757575</color>
+    <color name="Sabz_Pay">#179225</color>
+    <color name="stand_3">#C9C9C9</color>
+    <color name="stand_2">#AAAAAA</color>
+    <color name="Back_Color">#EFEFEF</color>
+    <color name="Stable_Text">#C4000000</color>
+    <color name="Payment_true">#25C76C</color>
+    <color name="Thirth_Color">#ff6523</color>
+    <color name="stand_Color">#8D101010</color>
+<!--    <color name="stand_Color">#8D101010</color>-->
+    <color name="Dynamic_Color">#BF000000</color>
+</resources>
