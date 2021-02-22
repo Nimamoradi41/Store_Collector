@@ -2,6 +2,7 @@ package com.example.store_collector
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -34,6 +35,7 @@ class LoginActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
 //        setContentView(R.layout.activity_login)
         setContentView(R.layout.activity_login_2)
+        window.statusBarColor=Color.parseColor("#6D63FF")
         button12.setOnClickListener {
             if (editTextTextPersonName4.text.trim().toString().isNullOrEmpty())
             {
@@ -100,30 +102,40 @@ class LoginActivity : BaseActivity() {
                     {
                         if (response.body()?.data!=null)
                         {
-                            sharedPreferences?.edit()?.putString(Constanc.USER_SECURITY_KEY, response.body()?.data!!.securityKey)?.apply()
-                            securityKey= response.body()?.data!!.securityKey
-                            Login(securityKey,object  :Login{
-                                override fun onLoginCompleted(success: Boolean,Type:Boolean) {
-                                    if (success)
-                                    {
+                            if (response.body()?.isSuccess!!)
+                            {
+                                if (response.body()?.data?.status==2)
+                                {
+                                    sharedPreferences?.edit()?.putString(Constanc.USER_SECURITY_KEY, response.body()?.data!!.securityKey)?.apply()
+                                    securityKey= response.body()?.data!!.securityKey
+                                    Login(securityKey,object  :Login{
+                                        override fun onLoginCompleted(success: Boolean,Type:Boolean) {
+                                            if (success)
+                                            {
 
-                                        if (Type)
-                                        {
-                                            Log.i("toldmsfgth","3")
-                                            startActivity(Intent(this@LoginActivity,
-                                                MainActivity_Safir::class.java))
-                                            finish()
-                                        }else{
-                                            Log.i("toldmsfgth","4")
-                                            startActivity(Intent(this@LoginActivity,MainActivity::class.java))
-                                            finish()
+                                                if (Type)
+                                                {
+                                                    Log.i("toldmsfgth","3")
+                                                    startActivity(Intent(this@LoginActivity,
+                                                            MainActivity_Safir::class.java))
+                                                    finish()
+                                                }else{
+                                                    Log.i("toldmsfgth","4")
+                                                    startActivity(Intent(this@LoginActivity,MainActivity::class.java))
+                                                    finish()
+                                                }
+                                            }else{
+                                                Snackbar.make(holder_2, "مشکلی در ورود به سیستم به وجود آمده است", Snackbar.LENGTH_SHORT).show()
+                                            }
                                         }
-                                    }else{
-                                        Snackbar.make(holder_2, "مشکلی در ورود به سیستم به وجود آمده است", Snackbar.LENGTH_SHORT).show()
-                                    }
+
+                                    })
+                                }else{
+                                    Snackbar.make(holder_2, "اطلاعات کاربری را اشتباه وارد کردید", Snackbar.LENGTH_SHORT).show()
                                 }
 
-                            })
+                            }
+
                         }
 
 //                        var i= Intent(activity, MultyActivity_2::class.java)

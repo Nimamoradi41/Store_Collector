@@ -44,6 +44,9 @@ class adapter_Main_safir(var C:Activity) : RecyclerView.Adapter<adapter_Main_saf
         }
 
 
+
+
+
         if (Item?.maxHourCanDelivery!=null)
         {
             holder.itemView.textView97.setText(Item.maxHourCanDelivery+" ساعت ")
@@ -72,7 +75,7 @@ class adapter_Main_safir(var C:Activity) : RecyclerView.Adapter<adapter_Main_saf
 
         if (Item?.maxDateCanDeliveryFa!=null)
         {
-            holder.itemView.textView40.setText(Item.maxDateCanDeliveryFa)
+            holder.itemView.textView40.setText(" حداکثر زمان تحویل "+Item.maxDateCanDeliveryFa)
         }
 
 

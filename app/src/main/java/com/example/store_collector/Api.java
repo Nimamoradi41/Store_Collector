@@ -1,7 +1,10 @@
 package com.example.store_collector;
 
 
+import com.example.Models.Change_Pass_Model;
+import com.example.Models.Change_Pass_Response;
 import com.example.Models.LoginResponse;
+import com.example.Models.Model_Action;
 import com.example.Models.ResGetOrderItem;
 import com.example.Models.ResStartCollect;
 import com.example.Models.Res_SetAction;
@@ -24,6 +27,10 @@ public interface Api {
     @Multipart
     @POST("/api/Account/ConfirmUser")
     Call<ConfirmSmsResponse> ConfirmUser(@Part("body") RequestBody body);
+
+    @Multipart
+    @POST("/api/Account/ChangePassword")
+    Call<Change_Pass_Response> Change_Pass(@Header("Authorization") String token,@Part("body") Change_Pass_Model body);
 
 
 
@@ -49,7 +56,7 @@ public interface Api {
 
     @Multipart
     @POST("/api/safir/SetAction")
-    Call<Res_SetAction> SetAction(@Header("Authorization") String token, @Part("body") RequestBody body);
+    Call<Res_SetAction> SetAction(@Header("Authorization") String token, @Part("body") Model_Action body);
 
 
 

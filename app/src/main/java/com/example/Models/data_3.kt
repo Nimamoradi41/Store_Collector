@@ -6,5 +6,6 @@ class data_3 {
   var productTitle :String ?=null
   var count :Int ?=null
   var productFirstImage :String ?=null
-  var barcode :Int ?=null
+  var barcode :String ?=null
+  var Selected:Boolean=false
 }

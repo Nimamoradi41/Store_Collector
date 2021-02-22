@@ -58,6 +58,17 @@
             android:layout_height="match_parent"
             android:background="#F5F5F5">
 
+            <ImageView
+                android:id="@+id/gnhmj"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                android:layout_marginStart="8dp"
+                android:padding="8dp"
+                android:tint="#9E9E9E"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/ic_bvbvb" />
             <TextView
                 android:id="@+id/textView11"
                 android:layout_width="wrap_content"
@@ -78,15 +89,15 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                android:gravity="right"
                 android:layout_marginEnd="8dp"
                 android:fontFamily="@font/vazir_med"
+                android:gravity="right"
                 android:textColor="#707070"
                 android:textSize="14sp"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="@+id/textView11"
                 app:layout_constraintEnd_toStartOf="@+id/textView11"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/imageView7"
                 app:layout_constraintTop_toTopOf="@+id/textView11"
                 tools:text="Nima MORADI" />
         </androidx.constraintlayout.widget.ConstraintLayout>

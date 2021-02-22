@@ -14,6 +14,17 @@ public class data {
     @SerializedName("age")
     private int age;
 
+    public com.example.Models.appVersion getAppVersion() {
+        return appVersion;
+    }
+
+    public void setAppVersion(com.example.Models.appVersion appVersion) {
+        this.appVersion = appVersion;
+    }
+
+    @Expose
+    @SerializedName("appVersion")
+    private appVersion appVersion;
 
 
     @Expose

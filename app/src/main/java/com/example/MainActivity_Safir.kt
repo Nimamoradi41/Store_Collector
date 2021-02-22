@@ -1,5 +1,6 @@
 package com.example
 
+import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -8,6 +9,7 @@ import android.view.View
 import com.example.Models.ResponseOreder
 import com.example.Models.Response_Safir
 import com.example.store_collector.*
+import io.github.inflationx.viewpump.ViewPumpContextWrapper
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_main.no_item_Card
 import kotlinx.android.synthetic.main.activity_main.ref
@@ -18,6 +20,9 @@ import retrofit2.Response
 
 class MainActivity_Safir : BaseActivity() {
     var ad_:adapter_Main_safir?=null
+    override fun attachBaseContext(newBase: Context?) {
+        super.attachBaseContext(ViewPumpContextWrapper.wrap(newBase!!))
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main__safir)
@@ -45,6 +50,9 @@ class MainActivity_Safir : BaseActivity() {
 
         }
 
+        gnhmj.setOnClickListener {
+            ChangePass()
+        }
         textView1dvd2.setText(Fullname)
 //        ad_= adapter_Main_safir(this)
 //        recy_Items_safir.adapter=ad_

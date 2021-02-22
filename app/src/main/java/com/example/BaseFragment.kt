@@ -7,27 +7,42 @@ import android.content.SharedPreferences
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.net.ConnectivityManager
+import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.os.Environment
+import android.provider.Settings
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
+import android.webkit.PermissionRequest
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
 import com.example.Models.ErrorCode500
 import com.example.Models.LoginResponse
 import com.example.store_collector.*
 import com.google.gson.Gson
 import com.google.gson.TypeAdapter
+import com.karumi.dexter.Dexter
+import com.karumi.dexter.MultiplePermissionsReport
+import com.karumi.dexter.PermissionToken
+import com.karumi.dexter.listener.multi.MultiplePermissionsListener
+import com.koushikdutta.ion.Ion
+import com.koushikdutta.ion.ProgressCallback
 import kotlinx.android.synthetic.main.custome_dial_app.view.*
+import kotlinx.android.synthetic.main.custome_dial_app.view.imageView10
 import kotlinx.android.synthetic.main.custome_dial_app_2.view.*
+import kotlinx.android.synthetic.main.layout_loading_2.view.*
 import okhttp3.MediaType
 import okhttp3.RequestBody
 import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.io.File
 import java.io.IOException
 
 open class BaseFragment : Fragment() {
@@ -36,6 +51,7 @@ open class BaseFragment : Fragment() {
     var UserName = ""
     var Fullname = ""
     var Password = ""
+    var Dia_Download : Dialog ?=null
     var api: Api?= null
     var token = ""
     var securityKey = ""
@@ -184,24 +200,96 @@ open class BaseFragment : Fragment() {
                     return
                 }
                 if (response.isSuccessful) {
+                    if(!response.body()?.data?.appVersion?.allowedToLogin!!)
+                    {
+                        Dial_Close()
+                        Dexter.withActivity(requireActivity()).withPermissions(
+                            android.Manifest.permission.READ_EXTERNAL_STORAGE,
+                            android.Manifest.permission.WRITE_EXTERNAL_STORAGE
+                        ).withListener(object : MultiplePermissionsListener {
+                            override fun onPermissionsChecked(report: MultiplePermissionsReport) {
+                                if (report.areAllPermissionsGranted()) {
+                                    if (isNetConnected()) {
+                                        Log.i("sdvkadnv","A")
+                                        Log.i("svknasnvjdnvaka","True")
+                                        val file = File(
+                                            Environment.getExternalStoragePublicDirectory(
+                                                Environment.DIRECTORY_DOWNLOADS).toString() + "/Store.apk")
+                                        if (file.exists()) file.delete()
+                                        var url = response.body()?.data?.appVersion?.url
+                                        if (!url?.startsWith("http://")!! && !url.startsWith("https://")) url = "http://$url"
+                                        Dia_Download= Dialog(requireActivity())
+                                        Dia_Download?.setCancelable(false)
+                                        val inflater = LayoutInflater.from(requireActivity())
+                                        val view_4: View = inflater.inflate(R.layout.layout_loading_2, null, false)
+                                        Dia_Download?.setContentView(view_4)
+                                        Dia_Download?.window?.setLayout(ConstraintLayout.LayoutParams.MATCH_PARENT,
+                                            ConstraintLayout.LayoutParams.MATCH_PARENT)
+                                        Dia_Download?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+                                        Dia_Download?.show()
+                                        Ion.with(requireActivity())
+                                            .load(url)
+                                            .progressHandler(ProgressCallback { downloaded, total ->
+                                                var dd=(downloaded*100)/total
+                                                view_4.progress_bar_1.setProgress(dd.toInt())
+                                                view_4.progressss.setText(dd.toString()+" % ")
+                                                Log.i("MyTagg", "onProgress: $downloaded : $total")
+                                            })
+                                            .write(file)
+                                            .setCallback { e, result ->
+                                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                                                    if (!activity?.packageManager?.canRequestPackageInstalls()!!) {
+                                                        Log.i("dvnkavjnanjvanv","UIYIYI")
+                                                        startActivityForResult(Intent(Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES).setData(
+                                                            Uri.parse(String.format("package:%s", activity?.packageName))), 1234)
+                                                    } else {
+                                                        Log.i("dvnkavjnanjvanv","ASD")
+                                                        InstallUpdate(result!!)
+                                                    }
+                                                } else {
+                                                    Log.i("dvnkavjnanjvanv","HJKHKK")
+                                                    InstallUpdate(result!!)
+                                                }
+                                            }
+                                    }
+                                } else {
+                                    if (report.isAnyPermissionPermanentlyDenied) {
+                                        Toast.makeText(requireActivity(),"با توجه به اینکه شما مجوزهای دسترسی را قبول نکردید ، امکان استفاده از اپلیکیشن وجود ندارد",Toast.LENGTH_LONG).show()
+                                    }
+                                }
+                            }
+
+
+
+
+                            override fun onPermissionRationaleShouldBeShown(
+                                permissions: MutableList<com.karumi.dexter.listener.PermissionRequest>?,
+                                token: PermissionToken?
+                            ) {
+                                Toast.makeText(requireActivity(),"با توجه به اینکه شما مجوزهای دسترسی را قبول نکردید ، امکان استفاده از اپلیکیشن وجود ندارد",Toast.LENGTH_LONG).show()
+                            }
+                        }).check()
+                    }else{
+                        sharedPreferences?.edit()?.putString(Constanc.USER_TOKEN, response.body()?.data?.token)?.apply()
+                        sharedPreferences?.edit()?.putString(Constanc.USER_SECURITY_KEY, response.body()?.data?.securityKey)?.apply()
+                        sharedPreferences?.edit()?.putString(Constanc.USER_FULLNAME, response.body()?.data?.fullName)?.apply()
+//                    sharedPreferences?.edit()?.putString(Constanc.USER_SECURITY_KEY, response.body()?.data?.securityKey)?.apply()
+//                    Log.i("dvdasv_2", response.body()?.data?.fullName.toString())
+                        Fullname=response.body()?.data?.fullName.toString()
+                        securityKey = response.body()?.data?.securityKey.toString()
+                        token = response.body()?.data?.token.toString()
+                        if (response.body()?.data?.type==3)
+                        {
+                            loging.onLoginCompleted(true,true)
+                        }else{
+                            loging.onLoginCompleted(true,false)
+                        }
+                    }
 //                    Log.i("dvdgfghjkikgfgdfsds", "200")
 //                    var Data = response.body()?.data
 //                    Log.i("nimamorafigurg", Data?.securityKey.toString())
 //                    Log.i("mkoptr", Data?.token.toString())
-                    sharedPreferences?.edit()?.putString(Constanc.USER_TOKEN, response.body()?.data?.token)?.apply()
-                    sharedPreferences?.edit()?.putString(Constanc.USER_SECURITY_KEY, response.body()?.data?.securityKey)?.apply()
-                    sharedPreferences?.edit()?.putString(Constanc.USER_FULLNAME, response.body()?.data?.fullName)?.apply()
-//                    sharedPreferences?.edit()?.putString(Constanc.USER_SECURITY_KEY, response.body()?.data?.securityKey)?.apply()
-//                    Log.i("dvdasv_2", response.body()?.data?.fullName.toString())
-                    Fullname=response.body()?.data?.fullName.toString()
-                    securityKey = response.body()?.data?.securityKey.toString()
-                    token = response.body()?.data?.token.toString()
-                    if (response.body()?.data?.type==3)
-                    {
-                        loging.onLoginCompleted(true,true)
-                    }else{
-                        loging.onLoginCompleted(true,false)
-                    }
+
 
                 }
                 else {
@@ -224,6 +312,28 @@ open class BaseFragment : Fragment() {
                 p.show()
             }
         })
+    }
+    fun InstallUpdate(result: File) {
+        val intent: Intent
+        Log.i("ahbahbcabhs","F")
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            Log.i("ahbahbcabhs","A")
+//            val apkUri = FileProvider.getUriForFile(this, BuildConfig.APPLICATION_ID +".fileprovider", result)
+            val apkUri = FileProvider.getUriForFile(requireActivity(), BuildConfig.APPLICATION_ID +".contentprovider", result)
+            Log.i("ahbahbcabhs","c")
+            intent = Intent(Intent.ACTION_INSTALL_PACKAGE)
+            intent.data = apkUri
+            intent.flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
+        } else {
+            Log.i("ahbahbcabhs","B")
+            val apkUri = Uri.fromFile(result)
+            intent = Intent(Intent.ACTION_VIEW)
+            intent.setDataAndType(apkUri, "application/vnd.android.package-archive")
+            Log.i("ahbahbcabhs","F")
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+        }
+        startActivity(intent)
+        activity?.finish()
     }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

@@ -81,7 +81,7 @@ class adapter_Main(var C:Activity) : RecyclerView.Adapter<adapter_Main.view>() {
 
         if (!Item?.maxDateCanDeliveryFa.isNullOrEmpty())
         {
-            holder.itemView.textView40.setText(Item?.maxDateCanDeliveryFa)
+            holder.itemView.textView40.setText(" حداکثر زمان تحویل "+Item?.maxDateCanDeliveryFa)
         }else{
             holder.itemView.textView40.setText("نامشخص")
         }

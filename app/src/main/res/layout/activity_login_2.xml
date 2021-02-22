@@ -13,6 +13,20 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <TextView
+            android:id="@+id/textView12"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:fontFamily="@font/vazir_med"
+            android:gravity="center"
+            android:text="به هایپر مارکت هوراد خوش آمدید"
+            android:textColor="#2C2C2C"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imageView55" />
         <ImageView
             android:id="@+id/imageView55"
             android:layout_width="200dp"
@@ -27,14 +41,14 @@
             android:id="@+id/textView16"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
+            android:layout_marginTop="16dp"
             android:layout_marginEnd="16dp"
             android:fontFamily="@font/vazir_med"
             android:text="نام کاربری"
             android:textColor="@color/stand_2"
             android:textSize="14sp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/imageView55" />
+            app:layout_constraintTop_toBottomOf="@+id/textView12" />
 
         <TextView
             android:id="@+id/textView18"
@@ -53,8 +67,9 @@
             android:id="@+id/editTextTextPersonName4"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
+            android:layout_marginStart="32dp"
             android:layout_marginTop="8dp"
+            android:layout_marginEnd="16dp"
             android:backgroundTint="@color/stand_3"
             android:ems="10"
             android:gravity="right"
@@ -65,7 +80,7 @@
             android:paddingRight="8dp"
             android:paddingBottom="10dp"
             android:singleLine="true"
-            android:textColor="#2C2C2C"
+            android:textColor="#5E5E5E"
             android:textColorHint="#E1E1E1"
             android:textCursorDrawable="@null"
             app:layout_constraintEnd_toEndOf="@+id/textView16"
@@ -76,8 +91,9 @@
             android:id="@+id/editTextTextPersonName"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
+            android:layout_marginStart="32dp"
             android:layout_marginTop="8dp"
+            android:layout_marginEnd="16dp"
             android:backgroundTint="@color/stand_3"
             android:ems="10"
             android:gravity="right"
@@ -88,7 +104,7 @@
             android:paddingRight="8dp"
             android:paddingBottom="10dp"
             android:singleLine="true"
-            android:textColor="#2C2C2C"
+            android:textColor="#5E5E5E"
             android:textColorHint="#E1E1E1"
             android:textCursorDrawable="@null"
             app:layout_constraintEnd_toEndOf="@+id/textView16"
@@ -119,7 +135,7 @@
                 android:background="@drawable/shpe_50"
                 android:elevation="8dp"
                 android:fontFamily="@font/vazir_med"
-                android:text="دریافت کد"
+                android:text="ورود"
                 android:textColor="@color/white"
                 android:textStyle="bold" />
         </com.dd.ShadowLayout>

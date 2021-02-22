@@ -41,18 +41,18 @@ class Frag_Two : BaseFragment() {
                               savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
         var View= inflater.inflate(R.layout.fragment_frag__two, container, false)
-        ad_= adapter_Main_safir(activity!!)
+        ad_= adapter_Main_safir(requireActivity())
         View.recy_One_23.adapter=ad_
-        GetOrder()
+        GetOrder(View)
         View.ref_12.setOnRefreshListener {
-            GetOrder()
+            GetOrder(View)
         }
 
 
         return  View
     }
 
-    fun  GetOrder()
+    fun  GetOrder(V:View)
     {
         DialLoad()
         var req=api?.GetOrder_Safir("Bearer " +token)
@@ -65,18 +65,37 @@ class Frag_Two : BaseFragment() {
                 {
                     if(response.body()?.data!=null)
                     {
-                        if (response.body()?.data?.orderAbsenceStatus?.size==0)
+                        if (response.body()?.data?.orderAbsenceStatus==null)
                         {
-                            no_item_Card_23.visibility= View.VISIBLE
+                            if (ad_?.list?.clear()!=null)
+                            {
+                                ad_?.list?.clear()
+                                ad_?.notifyDataSetChanged()
+                            }
+
+                            Log.i("svkmskdvsd","W")
+                            V.no_item_Card_23.visibility= View.VISIBLE
                         }else{
-                            no_item_Card_23.visibility= View.GONE
+                            Log.i("svkmskdvsd","Y")
+                            V. no_item_Card_23.visibility= View.GONE
                             ad_?.list?.clear()
-                            ad_?.list=response.body()?.data?.orderSendingStatus
+                            ad_?.list=response.body()?.data?.orderAbsenceStatus
                             ad_?.notifyDataSetChanged()
                         }
 
                     }else{
-                        no_item_Card_23.visibility= View.VISIBLE
+                        if (ad_?.list?.clear()!=null)
+                        {
+                            Log.i("svkmskdvsd","B")
+                            ad_?.list?.clear()
+                            ad_?.notifyDataSetChanged()
+                        }
+
+
+
+
+                        Log.i("svkmskdvsd","A")
+                        V. no_item_Card_23.visibility= View.VISIBLE
                     }
                 }
                 if (response.code()==401)
@@ -85,7 +104,7 @@ class Frag_Two : BaseFragment() {
                         override fun onLoginCompleted(success: Boolean,Type: Boolean) {
                             if (success)
                             {
-                                GetOrder()
+                                GetOrder(V)
                             }else{
                                 startActivity(Intent(requireActivity(), LoginActivity::class.java))
                                 activity?.finish()

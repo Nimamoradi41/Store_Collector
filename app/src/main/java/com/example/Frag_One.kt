@@ -33,7 +33,7 @@ class Frag_One : BaseFragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
        var View=inflater.inflate(R.layout.fragment_frag__one, container, false)
-        ad_= adapter_Main_safir(activity!!)
+        ad_= adapter_Main_safir(requireActivity())
         View.recy_One_22.adapter=ad_
         GetOrder()
         View.ref_11.setOnRefreshListener {
@@ -58,10 +58,17 @@ class Frag_One : BaseFragment() {
                 {
                     if(response.body()?.data!=null)
                     {
-                        if (response.body()?.data?.orderSendingStatus?.size==0)
+                        if (response.body()?.data?.orderSendingStatus==null)
                         {
+                            Log.i("astdatdsa","A")
+                            if (ad_?.list!=null)
+                            {
+                                ad_?.list?.clear()
+                                ad_?.notifyDataSetChanged()
+                            }
                             no_item_Card_22.visibility= View.VISIBLE
                         }else{
+                            Log.i("astdatdsa","B")
                             no_item_Card_22.visibility= View.GONE
                             ad_?.list?.clear()
                             ad_?.list=response.body()?.data?.orderSendingStatus
@@ -69,6 +76,11 @@ class Frag_One : BaseFragment() {
                         }
 
                     }else{
+                        if (ad_?.list!=null)
+                        {
+                            ad_?.list?.clear()
+                            ad_?.notifyDataSetChanged()
+                        }
                         no_item_Card_22.visibility= View.VISIBLE
                     }
                 }

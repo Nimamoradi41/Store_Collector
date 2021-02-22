@@ -30,12 +30,33 @@ class adapter_Items : RecyclerView.Adapter<adapter_Items.view>() {
         }else{
             holder.itemView.textView23.setText("نامشخص")
         }
+
+
         if (!Item?.productTitle.isNullOrEmpty())
         {
             holder.itemView.chr.setText(Item?.productTitle)
         }else{
             holder.itemView.chr.setText("نامشخص")
         }
+
+
+
+
+        holder.itemView.chr.isChecked = Item?.Selected!!
+
+
+
+        holder.itemView.chr.setOnClickListener {
+           var cc=list?.get(position)
+           cc?.Selected = holder.itemView.chr.isChecked
+            list?.set(position, cc!!)
+        }
+
+
+
+
+
+
 
     }
 

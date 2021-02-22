@@ -4,7 +4,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
-import android.view.View
+import com.example.Models.Model_Action
 import com.example.Models.ResGetOrderItem
 import com.example.Models.Res_SetAction
 import com.example.Models.data_4
@@ -13,11 +13,6 @@ import com.example.store_collector.Interface_new_2
 import com.example.store_collector.LoginActivity
 import com.example.store_collector.R
 import kotlinx.android.synthetic.main.activity_detail_item.*
-import kotlinx.android.synthetic.main.activity_detail_item.textView3
-import kotlinx.android.synthetic.main.activity_detail_item.textView4
-import kotlinx.android.synthetic.main.activity_detail_item.textView45
-import kotlinx.android.synthetic.main.activity_detail_item.textView6
-import kotlinx.android.synthetic.main.activity_detail_item.textView8
 import kotlinx.android.synthetic.main.activity_item__detail__sfir.*
 import kotlinx.android.synthetic.main.activity_item__detail__sfir_2.*
 import okhttp3.MediaType
@@ -25,6 +20,7 @@ import okhttp3.RequestBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.util.*
 
 class Item_Detail_Sfir : BaseActivity() {
     var data: data_4 ?=null
@@ -44,10 +40,25 @@ class Item_Detail_Sfir : BaseActivity() {
         }
 
 
+
+
+
+        textView41.setOnClickListener {
+            Log.i("vsnvljasdv", data?.latitude.toString())
+            Log.i("vsnvljasdv", data?.longitude.toString())
+            val uri = String.format(Locale.ENGLISH, "geo:${data?.longitude},${data?.latitude}?q=address", data?.latitude, data?.longitude)
+            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(uri))
+//            intent.setPackage("com.google.android.apps.maps");
+            startActivity(intent)
+        }
+
         if (data?.maxHourCanDelivery!=null)
         {
-            textView97.setText(data?.maxHourCanDelivery+" ساعت ")
+            textView97.setText(data?.maxHourCanDelivery + " ساعت ")
         }
+
+
+
 
 
 
@@ -68,8 +79,16 @@ class Item_Detail_Sfir : BaseActivity() {
         }
 
 
+        if(data?.addressTel!=null)
+        {
+            textView40.setText(" شماره تماس "+data?.addressTel)
+        }else{
+            textView40.setText("نامشخص")
+        }
 
-        textView40.setText("نامشخص")
+
+
+
 
         GetDetail(data?.id.toString())
 //        if (data?.addressPeykInfo!=null)
@@ -91,12 +110,11 @@ class Item_Detail_Sfir : BaseActivity() {
         }
 
         fvndsnas.setOnClickListener {
-            var p=   Dialog_Ask(6,"آیا مطمعن هستید ؟",object : Interface_new_2() {
+            var p=   Dialog_Ask(6, "آیا مطمعن هستید ؟", object : Interface_new_2() {
                 override fun News(s: String) {
-                    if (s.equals("A"))
-                    {
+                    if (s.equals("A")) {
                         DialLoad()
-                        SetAction(1.toString())
+                        SetAction("1")
                     }
                 }
 
@@ -113,12 +131,11 @@ class Item_Detail_Sfir : BaseActivity() {
 //
         vkadvad.setOnClickListener {
 
-            var p=   Dialog_Ask(6,"آیا مطمعن هستید ؟",object : Interface_new_2() {
+            var p=   Dialog_Ask(6, "آیا مطمعن هستید ؟", object : Interface_new_2() {
                 override fun News(s: String) {
-                    if (s.equals("A"))
-                    {
+                    if (s.equals("A")) {
                         DialLoad()
-                        SetAction(0.toString())
+                        SetAction("0")
                     }
                 }
 
@@ -127,12 +144,11 @@ class Item_Detail_Sfir : BaseActivity() {
         }
 //
         hcascgsv.setOnClickListener {
-            var p=   Dialog_Ask(6,"آیا مطمعن هستید ؟",object : Interface_new_2() {
+            var p=   Dialog_Ask(6, "آیا مطمعن هستید ؟", object : Interface_new_2() {
                 override fun News(s: String) {
-                    if (s.equals("A"))
-                    {
+                    if (s.equals("A")) {
                         DialLoad()
-                        SetAction(2.toString())
+                        SetAction("2")
                     }
                 }
 
@@ -218,20 +234,22 @@ class Item_Detail_Sfir : BaseActivity() {
     }
 
 
-    fun SetAction(Id:String)
+    fun SetAction(Id: String)
     {
-        var body= RequestBody.create(MediaType.parse("text/plane"),Id)
-        var req=api?.SetAction("Bearer " + token, body)
+        var Body=Model_Action()
+        Body.orderId=data?.id
+        Body.type=Id
+        var req=api?.SetAction("Bearer " + token, Body)
         req?.enqueue(object : Callback<Res_SetAction> {
             override fun onResponse(
-                call: Call<Res_SetAction>,
-                response: Response<Res_SetAction>
+                    call: Call<Res_SetAction>,
+                    response: Response<Res_SetAction>
             ) {
                 Log.i("zcvmzkmvzkmvmzv_2", response.code().toString())
                 Dial_Close()
                 if (response.isSuccessful) {
                     if (response.body()?.data != null) {
-                       setResult(RESULT_OK)
+                        setResult(RESULT_OK)
                         finish()
                     }
                 }
@@ -242,10 +260,10 @@ class Item_Detail_Sfir : BaseActivity() {
                                 GetDetail(Id)
                             } else {
                                 startActivity(
-                                    Intent(
-                                        this@Item_Detail_Sfir,
-                                        LoginActivity::class.java
-                                    )
+                                        Intent(
+                                                this@Item_Detail_Sfir,
+                                                LoginActivity::class.java
+                                        )
                                 )
                                 finish()
                             }
@@ -276,8 +294,8 @@ class Item_Detail_Sfir : BaseActivity() {
         var req=api?.GetOrderItem_Safir("Bearer " + token, body)
         req?.enqueue(object : Callback<ResGetOrderItem> {
             override fun onResponse(
-                call: Call<ResGetOrderItem>,
-                response: Response<ResGetOrderItem>
+                    call: Call<ResGetOrderItem>,
+                    response: Response<ResGetOrderItem>
             ) {
                 Log.i("zcvmzkmvzkmvmzv_2", response.code().toString())
                 Dial_Close()
@@ -294,10 +312,10 @@ class Item_Detail_Sfir : BaseActivity() {
                                 GetDetail(Id)
                             } else {
                                 startActivity(
-                                    Intent(
-                                        this@Item_Detail_Sfir,
-                                        LoginActivity::class.java
-                                    )
+                                        Intent(
+                                                this@Item_Detail_Sfir,
+                                                LoginActivity::class.java
+                                        )
                                 )
                                 finish()
                             }

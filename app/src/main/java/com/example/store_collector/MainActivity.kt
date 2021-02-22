@@ -1,5 +1,6 @@
 package com.example.store_collector
 
+import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -8,6 +9,7 @@ import android.view.View
 import com.example.Dial_App
 import com.example.Login
 import com.example.Models.ResponseOreder
+import io.github.inflationx.viewpump.ViewPumpContextWrapper
 import kotlinx.android.synthetic.main.activity_main.*
 import retrofit2.Call
 import retrofit2.Callback
@@ -22,7 +24,9 @@ class MainActivity : BaseActivity() {
         ad_= adapter_Main(this)
 
         recy_Items.adapter=ad_
-
+        imageView7.setOnClickListener {
+            ChangePass()
+        }
         imageView4.setOnClickListener {
             var p=   Dialog_Ask(6,"آیا می خواهید از حساب خود خارج شوید ؟",object : Interface_new_2() {
                 override fun News(s: String) {
@@ -61,8 +65,6 @@ class MainActivity : BaseActivity() {
 
         }
     }
-
-
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode==10)
@@ -74,6 +76,9 @@ class MainActivity : BaseActivity() {
         }
     }
 
+    override fun attachBaseContext(newBase: Context?) {
+        super.attachBaseContext(ViewPumpContextWrapper.wrap(newBase!!))
+    }
   fun  GetOrder()
   {
       DialLoad()

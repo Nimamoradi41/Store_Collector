@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.Toast
 import com.example.Dial_App
 import com.example.Login
 import com.example.Models.ResGetOrderItem
@@ -90,7 +91,7 @@ class DetailItem : BaseActivity() {
 
         if (data?.maxDateCanDeliveryFa!=null)
         {
-            textView40.setText(data?.maxDateCanDeliveryFa)
+            textView40.setText(" حداکثر زمان تحویل "+data?.maxDateCanDeliveryFa)
         }else{
             textView40.setText("نامشخص")
         }
@@ -107,8 +108,23 @@ class DetailItem : BaseActivity() {
 
 
         fvndsnas.setOnClickListener {
+
             if (isNetConnected())
             {
+                var vvv=true
+
+                adpter?.list?.forEach {
+                    if (!it.Selected)
+                    {
+                        vvv=false
+                        return@forEach
+                    }
+                }
+                if (!vvv)
+                {
+                    Toast.makeText(this@DetailItem,"تیک محصولات را فعال کنید",Toast.LENGTH_SHORT).show()
+                    return@setOnClickListener
+                }
 //                DialLoad()
                 var p=   Dialog_Ask(6,"آیا مطمعن هستید ؟",object : Interface_new_2() {
                     override fun News(s: String) {
@@ -116,6 +132,7 @@ class DetailItem : BaseActivity() {
                         {
                             DialLoad()
                             EndCollect(data?.id.toString())
+
                         }
                     }
 
@@ -157,7 +174,8 @@ class DetailItem : BaseActivity() {
 
 //     textView45.setText((pos+1).toString())
 
-        GetOrderItem(data?.id.toString())
+
+            GetOrderItem(data?.id.toString())
 
     }
 
@@ -283,6 +301,8 @@ class DetailItem : BaseActivity() {
                 }
             }
             override fun onFailure(call: Call<ResGetOrderItem>, t: Throwable) {
+                Log.i("sdvknalbasfSF", t?.message.toString())
+                Log.i("sdvknalbasfSF", t?.toString())
                 Dial_Close()
                 var I=3
                 var p=   Dialapp(I,"لطفا دوباره تلاش کنید",object : Dial_App.Interface_new{
